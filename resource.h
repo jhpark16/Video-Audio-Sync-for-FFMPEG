@@ -6,8 +6,14 @@
 
 #define IDD_ABOUTBOX				100
 #define IDR_MAINFRAME				128
+#define ID_PANE_START       200
+#define ID_PANE_END         201
+#define ID_PANE_ZOOM        202
+#define ID_PANE_DELAY       203
+
 //#define IDR_VIDEOAUDIOSYNCTYPE	129
 #define ID_FILE_NEW_WINDOW			32771
+#define ID_FILE_PLAY            32772
 
 // Next default values for new objects
 // 

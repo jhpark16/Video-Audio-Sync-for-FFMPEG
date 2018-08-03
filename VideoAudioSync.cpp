@@ -30,7 +30,8 @@ public:
 		_RunData* pData = (_RunData*)lpData;
 		CMainFrame wndFrame;
 
-		if(wndFrame.CreateEx() == NULL)
+    RECT rect = { 0,0,958,780 };
+		if(wndFrame.CreateEx(NULL,rect, 0, 0, NULL) == NULL)
 		{
 			ATLTRACE(_T("Frame window creation failed!\n"));
 			return 0;

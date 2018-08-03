@@ -66,12 +66,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)Include;$(SolutionDir)WTL\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)Include;$(SolutionDir)WTL\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -86,10 +88,14 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Ws2_32.lib;Secur32.lib;Bcrypt.lib;legacy_stdio_definitions.lib;libavcodec.a;libavformat.a;libavutil.a;libswresample.a;SDL2.lib;SDL2main.lib;;winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -122,6 +128,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Ws2_32.lib;Secur32.lib;Bcrypt.lib;legacy_stdio_definitions.lib;libavcodec.a;libavformat.a;libavutil.a;libswresample.a;SDL2.lib;SDL2main.lib;;winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -147,9 +154,14 @@
       <ExceptionHandling />
       <DebugInformationFormat />
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>Ws2_32.lib;Secur32.lib;Bcrypt.lib;legacy_stdio_definitions.lib;libavcodec.a;libavformat.a;libavutil.a;libswresample.a;SDL2.lib;SDL2main.lib;;winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -179,6 +191,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>Ws2_32.lib;Secur32.lib;Bcrypt.lib;legacy_stdio_definitions.lib;libavcodec.a;libavformat.a;libavutil.a;libswresample.a;SDL2.lib;SDL2main.lib;;winmm.lib;imm32.lib;version.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -210,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDlg.h" />
+    <ClInclude Include="FileDialogFileList.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -225,4 +239,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="VideoAudioSync.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
