@@ -358,7 +358,7 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 LRESULT CMainFrame::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 {
   CString tStr;
-  const int nGroupUnit = 256; // the unit change of the viewport
+  const int nGroupUnit = 64; // the unit change of the viewport
   const int maxGroup = 16384;
   bool bPanelTimeUpdate = false;
   // If Left arrow (37) or Right arrow (39) is pressed
@@ -539,7 +539,7 @@ LRESULT CMainFrame::OnFileSave(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCt
       if ((fp1 = _wfopen(tCstr, L"wt"))!= NULL) {
         tCstr.Format(L"%02d:%02d:%02d", nHour, nMin, nSec);
         fwprintf(fp1, L"REM %s %.4f\n", tCstr, -m_view.nShift / (float)AUDIO_SAMPLE_RATE);
-        fwprintf(fp1, L"ffmpeg -y -i \"concat:%s\" -itsoffset %.4f -i %s -c:v copy -c:a ac3 -map 0:v -map 1:a -map 0:a -ss %s %s\n",
+        fwprintf(fp1, L"ffmpeg -y -i \"concat:%s\" -itsoffset %.4f -i \"%s\" -c:v copy -c:a ac3 -map 0:v -map 1:a -map 0:a -ss %s -f mpegts \"%s\"\n",
           videoList, -m_view.nShift / (float)AUDIO_SAMPLE_RATE, (*m_fileList)[idxAudio], tCstr, videoOutput);
         fclose(fp1);
       }
@@ -583,6 +583,7 @@ void CMainFrame::Play() //CView& m_view
     m_view.GetClientRect(&rect);
     int nOutput = m_view.nGroup*rect.right;
     out_buffer_pos = (Uint8*)&(Audio_Buffer[m_view.nBase * 2]);
+    int curPos = 0;
     int size = AUDIO_OUT_SAMPLE_SIZE;
     audio_len = 0;
     while (nOutput > 0 && m_view.bContinue) {
@@ -592,16 +593,17 @@ void CMainFrame::Play() //CView& m_view
       if (size <= nOutput) {
         for (int i = 0; i < size; i++) {
           if (m_view.bLeft)
-            ((Sint16*)audio_buffer)[i * 2] = ((Sint16*)out_buffer_pos)[i * 2];
+            ((Sint16*)audio_buffer)[i * 2] = Audio_Buffer[(m_view.nBase + curPos + i) * 2];
           else
             ((Sint16*)audio_buffer)[i * 2] = 0;
-          if (m_view.bRight)
-            ((Sint16*)audio_buffer)[i * 2 + 1] = ((Sint16*)out_buffer_pos)[i * 2];
+          if (m_view.bRight && m_view.nBase + m_view.nShift + curPos + i >= 0)
+              ((Sint16*)audio_buffer)[i * 2 + 1] = Audio_Buffer[(m_view.nBase + m_view.nShift + curPos + i) * 2 + 1];
           else
             ((Sint16*)audio_buffer)[i * 2 + 1] = 0;
         }
         //memcpy(audio_buffer, out_buffer_pos, size);
         out_buffer_pos += size * 4;
+        curPos += size;
         nOutput -= size;
         //      audio_buffer_pos = audio_buffer;
         audio_len = size * 4;
@@ -609,11 +611,11 @@ void CMainFrame::Play() //CView& m_view
       else {
         for (int i = 0; i < nOutput; i++) {
           if (m_view.bLeft)
-            ((Sint16*)audio_buffer)[i * 2] = ((Sint16*)out_buffer_pos)[i * 2];
+            ((Sint16*)audio_buffer)[i * 2] = Audio_Buffer[(m_view.nBase + curPos + i) * 2];
           else
             ((Sint16*)audio_buffer)[i * 2] = 0;
-          if (m_view.bRight)
-            ((Sint16*)audio_buffer)[i * 2 + 1] = ((Sint16*)out_buffer_pos)[i * 2];
+          if (m_view.bRight && m_view.nBase + m_view.nShift + curPos + i >= 0)
+              ((Sint16*)audio_buffer)[i * 2 + 1] = Audio_Buffer[(m_view.nBase + m_view.nShift + curPos + i) * 2 + 1];
           else
             ((Sint16*)audio_buffer)[i * 2 + 1] = 0;
         }
